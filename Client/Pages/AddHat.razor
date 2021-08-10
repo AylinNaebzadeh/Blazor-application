@@ -1,0 +1,55 @@
+@page "/createHat"
+@using BlazorDB.Shared.Models
+@inject HttpClient client
+@inject NavigationManager NavManager
+
+<link rel="stylesheet" href="css/AddPro.css">
+<link href="/validation.css" rel="stylesheet" />
+
+<h1 class="bg-info text-white">Create Hat</h1>
+
+<EditForm Model="@hat" OnValidSubmit="CreateHatt">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label>Catagory</label>
+        <InputText class="form-control" placeholder="Catagory" @bind-Value="hat.Catagory" />
+    </div>
+    <div class="form-group">
+        <label>Price</label>
+        <InputNumber class="form-control" placeholder="Price" @bind-Value="hat.Price" />
+    </div>
+    <div class="form-group">
+        <label>Inventory</label>
+        <InputNumber class="form-control" placeholder="Inventory" @bind-Value="hat.Inventory" />
+    </div>
+    <div class="form-group">
+        <label>Size</label>
+        <InputText class="form-control" placeholder="Size" @bind-Value="hat.Size" />
+    </div>
+    <div class="form-group">
+        <label>Material</label>
+        <InputText class="form-control" placeholder="Material" @bind-Value="hat.Material" />
+    </div>
+    <div class="form-group">
+        <label>ImgURL</label>
+        <InputText class="form-control" placeholder="ImgURL" @bind-Value="hat.ImgURL" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Create Hat</button>
+    </div>
+</EditForm>
+
+
+
+@code
+{
+    Product hat = new Product();
+    async Task CreateHatt()
+    {
+        var Url = @"https://blazordb.herokuapp.com/api/Product/AddNewProductToDB";
+        await client.PostAsJsonAsync(Url,hat);
+        NavManager.NavigateTo("/hat");
+    }
+}
+

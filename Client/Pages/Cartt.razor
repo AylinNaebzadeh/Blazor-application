@@ -1,0 +1,81 @@
+@page "/cart"
+@using BlazorDB
+@using BlazorDB.Shared
+@using BlazorDB.Shared.Models
+@inject HttpClient Client
+@inject IJSRuntime js
+@inject NavigationManager NavManager
+
+
+
+<link rel="stylesheet" href="css/Cart.css">
+<table class="a">
+    <tr>
+        <th class="a">Number of Clothes You Chose : @Buy.count</th>
+        <th class="a">Total Cost : @Buy.cost $</th>
+        <th class="a">
+            <button class="btn btn-primary" @onclick="End" disabled="@IsDisablee()">End Of Purchase</button>
+        </th>
+    </tr>
+</table>
+<br>
+
+<div class="form-group">
+    <a class="btn btn-primary" @onclick="BackToHome"><i class="oi oi-home"></i>Back to Home</a>
+</div>
+
+
+
+
+
+
+<div class="table-wrapper">
+    <table class="fl-table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Price</th>
+                <th>Material</th>
+                <th>Count</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var key in BlazorDB.Shared.Models.MyCart.cart.Keys)
+            {
+                <tr>
+                    <td>
+                        <img src=@key.ImgURL asp-append-version="true" width="100px" height="100px" />
+                    </td>
+                    <td>@key.Price</td>
+                    <td>@key.Material</td>
+                    <td>@BlazorDB.Shared.Models.MyCart.cart[key]</td>
+                    <td><button class="btn btn-red" @onclick="()=>MyRemove(key)">Remove From Cart</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@code {
+
+    public bool IsDisablee() => Buy.count == 0;
+
+    private void BackToHome()
+    {
+        NavManager.NavigateTo("/");
+    }
+    private void End()
+    {
+        NavManager.NavigateTo("/user");
+    }
+    public void  MyRemove(Product k)
+    {
+        Buy.cost -= k.Price;
+        Buy.count--;
+        if (BlazorDB.Shared.Models.MyCart.cart[k] == 1) { BlazorDB.Shared.Models.MyCart.cart.Remove(k); }
+        else { BlazorDB.Shared.Models.MyCart.cart[k]--; }
+    }
+}

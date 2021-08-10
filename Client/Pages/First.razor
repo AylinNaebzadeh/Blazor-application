@@ -1,0 +1,48 @@
+@page "/"
+@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
+
+
+<link rel="stylesheet" href="css/First.css">
+
+<nav>
+    <h2>Drop Down Menu</h2>
+    <input id="toggle" type="checkbox" checked>
+    <ul>
+        <li><a @onclick="gotocart">Cart</a></li>
+        <li><a @onclick="gotohat">Hat</a></li>
+        <li><a @onclick="gotojacket">Jacket</a></li>
+        <li><a @onclick="gotopants">Pants</a></li>
+        <li><a @onclick="gotoshoes">Shoes</a></li>
+        <li><a @onclick="gototshirt">T-shirt</a></li>
+    </ul>
+</nav>
+
+@code
+{
+    private void gotocart()
+    {
+        NavManager.NavigateTo("/cart");
+    }
+    private void gotojacket()
+    {
+        NavManager.NavigateTo("/jacket");
+    }
+    private void gotopants()
+    {
+        NavManager.NavigateTo("/pants");
+    }
+    private void gotoshoes()
+    {
+        NavManager.NavigateTo("/shoes");
+    }
+    private void gototshirt()
+    {
+        NavManager.NavigateTo("/tshirt");
+    }
+    private void gotohat()
+    {
+        NavManager.NavigateTo("/hat");
+    }
+
+}

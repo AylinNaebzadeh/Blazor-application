@@ -1,0 +1,17 @@
+@page "/last"
+@inject NavigationManager NavManager
+
+<link rel="stylesheet" href="css/Last.css">
+
+<h1>Thank You For Shopping<br>
+<a href="https://blazordb.herokuapp.com/">Back To First Page</a><br>
+<a href="http://www.aylinnaebzadeh.ir/">My Personal Website</a></h1>
+
+
+@code
+{
+    private void BackToHome()
+    {
+        NavManager.NavigateTo("/");
+    }
+}

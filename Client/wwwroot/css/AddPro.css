@@ -1,0 +1,43 @@
+body {
+    background-color: rgb(245, 243, 178);
+}
+.btn-green {
+    color: #fff;
+    background-color: #11e234;
+    border-color: #0de266;
+}
+/* Delete */
+.btn-red {
+    color: #fff;
+    background-color: #ee290f;
+    border-color: #e9332d;
+}
+/* Buy */
+.btn-buy {
+    color: #fff;
+    background-color: #f7e123;
+    border-color: #ec6206;
+}
+
+@media only screen and (min-width: 600px){
+    select {
+        width: 850px;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+}
+@media only screen and (max-width: 600px){
+    select {
+        width: 355px;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+}

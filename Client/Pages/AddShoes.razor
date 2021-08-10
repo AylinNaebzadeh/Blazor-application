@@ -1,0 +1,53 @@
+@page "/addshoes"
+
+@using BlazorDB.Shared.Models
+@inject HttpClient client
+@inject NavigationManager NavManager
+
+<link rel="stylesheet" href="css/AddPro.css">
+<link href="/validation.css" rel="stylesheet" />
+
+<h1 class="bg-info text-white">Create Shoes</h1>
+
+<EditForm Model="@sh" OnValidSubmit="CreateShoesss">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label>Catagory</label>
+        <InputText class="form-control" placeholder="Catagory" @bind-Value="sh.Catagory" />
+    </div>
+    <div class="form-group">
+        <label>Price</label>
+        <InputNumber class="form-control" placeholder="Price" @bind-Value="sh.Price" />
+    </div>
+    <div class="form-group">
+        <label>Inventory</label>
+        <InputNumber class="form-control" placeholder="Inventory" @bind-Value="sh.Inventory" />
+    </div>
+    <div class="form-group">
+        <label>Size</label>
+        <InputText class="form-control" placeholder="Size" @bind-Value="sh.Size" />
+    </div>
+    <div class="form-group">
+        <label>Material</label>
+        <InputText class="form-control" placeholder="Material" @bind-Value="sh.Material" />
+    </div>
+    <div class="form-group">
+        <label>ImgURL</label>
+        <InputText class="form-control" placeholder="ImgURL" @bind-Value="sh.ImgURL" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Create Shoes</button>
+    </div>
+</EditForm>
+
+@code
+{
+    Product sh = new Product();
+    async Task CreateShoesss()
+    {
+        var Url = @"https://blazordb.herokuapp.com/api/Product/AddNewProductToDB";
+        await client.PostAsJsonAsync(Url,sh);
+        NavManager.NavigateTo("/shoes");
+    }
+}

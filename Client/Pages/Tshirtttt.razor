@@ -1,0 +1,135 @@
+@page "/tshirt"
+
+
+@using BlazorDB
+@using BlazorDB.Shared.Models
+@inject HttpClient Client
+@inject IJSRuntime js
+@inject NavigationManager NavManager
+
+<link rel="stylesheet" href="css/ProTable.css">
+
+
+<table class="a">
+    <tr>
+        <th class="a">Number of Clothes You Chose : @Buy.count</th>
+        <th class="a">Total Cost : @Buy.cost $</th>
+        <th class="a">
+            <button class="btn btn-primary" @onclick="End" disabled="@IsDisablee()">End Of Purchase</button>
+        </th>
+    </tr>
+</table>
+<br>
+
+<div class="form-group">
+    <a class="btn btn-primary" @onclick="BackToHome"><i class="oi oi-home"></i>Back to Home</a>
+</div>
+
+
+<div class="form-group">
+    <a class="btn btn-green" @onclick="GoToCreateTshirt"><i class="oi oi-plus"></i>Create New</a>
+</div>
+
+
+
+@if (ssss == null)
+{
+    <text>Loading....</text>
+}
+else if (ssss.Count == 0)
+{
+    <text>No Records Found</text>
+}
+
+else
+{
+    <div class="table-wrapper">
+        <table class="fl-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Price</th>
+                    <th>Inventory</th>
+                    <th>Material</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                    <th>AddToCart</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ssss)
+                {
+                    <tr>
+                        <td>
+                            <img src=@item.ImgURL asp-append-version="true" width="100px" height="100px" />
+                        </td>
+                        <td>@item.Price</td>
+                        <td>@item.Inventory</td>
+                        <td>@item.Material</td>
+                        <td>
+                            <a class="btn btn-primary" href="https://blazordb.herokuapp.com/edittshirt/@item.ID">Edit</a>
+                        </td>
+                        <td>
+                            <button class="btn btn-red" @onclick="@((arg) => Delete(item.ID))">Delete</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-buy" @onclick="() => AddToCart(item)" disabled="@(item.Inventory == 0 ? true : false)">Add To Cart</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code
+{
+    List<Product> ssss { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var URL = @"https://blazordb.herokuapp.com/api/Product/GetAllProductByCatagory/Tshirt";
+        ssss = await Client.GetFromJsonAsync<List<Product>>(URL);
+    }
+
+    async Task Delete(int ssssid)
+    {
+        var h = ssss.First(x => x.ID == ssssid);
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete T-shirt with ID: ({h.ID}) Record?"))
+        {
+            await Client.DeleteAsync(@"https://blazordb.herokuapp.com/api/Product/DeleteProductFromDbById/"+ssssid.ToString());
+            await OnInitializedAsync();
+        }
+    }
+
+    private void GoToCreateTshirt()
+    {
+        NavManager.NavigateTo("/addtshirt");
+    }
+
+
+
+    private void BackToHome()
+    {
+        NavManager.NavigateTo("/");
+    }
+    private void End()
+    {
+        NavManager.NavigateTo("/user");
+    }
+
+    private bool IsDisablee() =>Buy.count == 0;
+
+
+    private async Task AddToCart(Product c)
+    {
+        await Client.PutAsJsonAsync(@"https://blazordb.herokuapp.com/api/Product/AddedToCart",c);
+        Buy.count+=1;
+        Buy.cost+=c.Price;
+        if(!MyCart.cart.ContainsKey(c))
+            MyCart.cart.Add(c,1);
+        else{
+            MyCart.cart[c] = MyCart.cart[c] + 1;
+        }
+        await OnInitializedAsync();
+    }
+}

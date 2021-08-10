@@ -1,0 +1,59 @@
+@page "/addtshirt"
+
+@using BlazorDB.Shared.Models
+@inject HttpClient client
+@inject NavigationManager NavManager
+
+<link rel="stylesheet" href="css/AddPro.css">
+<link href="/validation.css" rel="stylesheet" />
+
+<h1 class="bg-info text-white">Create Tshirt</h1>
+
+<EditForm Model="@t" OnValidSubmit="CreateTshirttt">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label>Catagory</label>
+        <InputText class="form-control" placeholder="Catagory" @bind-Value="t.Catagory" />
+    </div>
+    <div class="form-group">
+        <label>Price</label>
+        <InputNumber class="form-control" placeholder="Price" @bind-Value="t.Price" />
+    </div>
+    <div class="form-group">
+        <label>Inventory</label>
+        <InputNumber class="form-control" placeholder="Inventory" @bind-Value="t.Inventory" />
+    </div>
+    <div class="form-group">
+        <label>Size</label>
+        <InputText class="form-control" placeholder="Size" @bind-Value="t.Size" />
+    </div>
+    <div class="form-group">
+        <label>Material</label>
+        <InputText class="form-control" placeholder="Material" @bind-Value="t.Material" />
+    </div>
+    <div class="form-group">
+        <label>ImgURL</label>
+        <InputText class="form-control" placeholder="ImgURL" @bind-Value="t.ImgURL" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Create T-shirt</button>
+    </div>
+</EditForm>
+
+
+
+
+
+
+
+@code
+{
+    Product t = new Product();
+    async Task CreateTshirttt()
+    {
+        var Url = @"https://blazordb.herokuapp.com/api/Product/AddNewProductToDB";
+        await client.PostAsJsonAsync(Url,t);
+        NavManager.NavigateTo("/tshirt");
+    }
+}

@@ -1,0 +1,63 @@
+@page "/edittshirt/{tId:int}"
+
+@using BlazorDB.Shared.Models
+@inject HttpClient Client
+@inject NavigationManager NavigationManager
+@inject IJSRuntime Js
+
+
+<link rel="stylesheet" href="css/AddPro.css">
+<link href="/validation.css" rel="stylesheet" />
+
+<h1 class="bg-info text-white">Update</h1>
+
+<EditForm Model="@jj" OnValidSubmit="EditJJ">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label>Price</label>
+        <InputNumber class="form-control" placeholder="Price" @bind-Value="jj.Price" />
+    </div>
+    <div class="form-group">
+        <label>Inventory</label>
+        <InputNumber class="form-control" placeholder="Inventory" @bind-Value="jj.Inventory" />
+    </div>
+    <div class="form-group">
+        <label>Size</label>
+        <InputText class="form-control" placeholder="Size" @bind-Value="jj.Size" />
+    </div>
+    <div class="form-group">
+        <label>Material</label>
+        <InputText class="form-control" placeholder="Material" @bind-Value="jj.Material" />
+    </div>
+    <div class="form-group">
+        <label>ImgURL</label>
+        <InputText class="form-control" placeholder="ImgURL" @bind-Value="jj.ImgURL" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</EditForm>
+
+
+
+
+
+@code
+{
+    [Parameter]
+    public int tId{get; set;}
+    Product jj = new Product();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        var Url = @"https://blazordb.herokuapp.com/api/Product/getProductByIdFromDb/"+tId.ToString();
+        jj = await Client.GetFromJsonAsync<Product>(Url);
+    }
+
+    async Task EditJJ()
+    {
+        await Client.PutAsJsonAsync("https://blazordb.herokuapp.com/api/Product/UpdateProductFromDB",jj);
+        NavigationManager.NavigateTo("/tshirt");
+    }
+}
